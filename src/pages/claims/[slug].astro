@@ -1,0 +1,82 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Button from '@components/Button.astro';
+import Icon from '@components/Icon.astro';
+import CtaBand from '@components/CtaBand.astro';
+import { CLAIMS, type ClaimType } from '@data/claims';
+
+export function getStaticPaths() {
+  return CLAIMS.map(c => ({ params: { slug: c.slug }, props: { claim: c } }));
+}
+
+const { claim } = Astro.props as { claim: ClaimType };
+const others = CLAIMS.filter(c => c.slug !== claim.slug);
+
+const lists = [
+  { title: 'Common situations', icon: 'home', items: claim.examples },
+  { title: 'Where insurers push back', icon: 'alert', items: claim.issues },
+  { title: 'What we review', icon: 'search', items: claim.review },
+] as const;
+---
+
+<MainLayout title={claim.title} description={`${claim.summary} ERT Policyholders Advocates helps policyholders with ${claim.navLabel.toLowerCase()} claims.`}>
+  <PageHero eyebrow="Losses we handle" title={claim.title} lead={claim.summary} icon={claim.icon} crumbs={[{ label: 'Losses We Handle', href: '/#claim-types' }, { label: claim.navLabel }]}>
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+      <Button href="/contact#request-help" size="lg" arrow>Request a Free Claim Review</Button>
+    </div>
+  </PageHero>
+
+  <section class="container-x py-16 sm:py-20">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
+      <div class="space-y-5 text-lg text-slate-700 lg:col-span-2">
+        {claim.intro.map(p => <p>{p}</p>)}
+        <div class="!mt-8 rounded-xl border-l-4 border-gold-500 bg-navy-900 p-5 text-base text-navy-100">
+          <p><span class="font-semibold text-gold-300">Where claims go wrong:</span> {claim.carrierIssue}</p>
+        </div>
+      </div>
+      <aside class="card h-fit">
+        <h2 class="text-xl font-semibold text-navy-900">First steps after a loss</h2>
+        <ol class="mt-4 space-y-3">
+          {claim.firstSteps.map((s, i) => (
+            <li class="flex gap-3 text-sm text-slate-700">
+              <span class="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-gold-400 text-xs font-bold text-navy-950">{i + 1}</span>{s}
+            </li>
+          ))}
+        </ol>
+        <a href="/resources" class="link-gold mt-5 inline-block text-sm">Full after-loss checklist</a>
+      </aside>
+    </div>
+
+    <div class="mt-16 grid gap-6 md:grid-cols-3">
+      {lists.map(l => (
+        <div class="card">
+          <span class="icon-tile"><Icon name={l.icon} /></span>
+          <h2 class="mt-5 text-xl font-semibold text-navy-900">{l.title}</h2>
+          <ul class="mt-4 space-y-2.5">
+            {l.items.map(it => (
+              <li class="flex gap-2.5 text-slate-600"><Icon name="check" class="mt-1 size-4 shrink-0 text-gold-600" />{it}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="bg-white py-16">
+    <div class="container-x">
+      <h2 class="text-2xl font-semibold text-navy-900">Other losses we handle</h2>
+      <div class="mt-6 grid gap-4 sm:grid-cols-3">
+        {others.map(c => (
+          <a href={`/claims/${c.slug}`} class="group flex items-center gap-3 rounded-xl border border-slate-200 p-4 transition hover:border-gold-400">
+            <span class="inline-flex size-10 items-center justify-center rounded-lg bg-navy-900 text-gold-400"><Icon name={c.icon} class="size-5" /></span>
+            <span class="font-semibold text-navy-900">{c.navLabel}</span>
+            <Icon name="arrowRight" class="ms-auto size-4 text-gold-600 transition group-hover:translate-x-0.5" />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</MainLayout>

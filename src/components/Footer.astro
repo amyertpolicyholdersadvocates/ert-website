@@ -1,0 +1,81 @@
+---
+import BrandLogo from './BrandLogo.astro';
+import Icon from './Icon.astro';
+import { SITE, LICENSES, ADJUSTER, statesSentence } from '@data/site';
+import { CLAIMS } from '@data/claims';
+
+const year = new Date().getFullYear();
+const linkCls = 'text-navy-200 transition hover:text-gold-300';
+---
+
+<footer class="mt-auto bg-navy-950 text-navy-200">
+  <div class="h-1 bg-gradient-to-r from-gold-600 via-gold-300 to-gold-600"></div>
+  <div class="container-x py-14">
+    <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <BrandLogo tone="light" class="h-14 w-auto" />
+        <p class="mt-5 max-w-sm text-sm leading-relaxed">{SITE.tagline}</p>
+        <div class="mt-5 space-y-2 text-sm">
+          <a href={`mailto:${SITE.email}`} class={`flex items-center gap-2 ${linkCls}`}>
+            <Icon name="envelope" class="size-4 text-gold-400" />{SITE.email}
+          </a>
+          {SITE.phone && (
+            <a href={`tel:${SITE.phone.replace(/[^0-9+]/g, '')}`} class={`flex items-center gap-2 ${linkCls}`}>
+              <Icon name="phone" class="size-4 text-gold-400" />{SITE.phone}
+            </a>
+          )}
+        </div>
+      </div>
+
+      <div class="lg:col-span-2">
+        <h3 class="font-sans text-sm font-semibold tracking-wider text-white uppercase">Losses We Handle</h3>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {CLAIMS.map(c => <li><a class={linkCls} href={`/claims/${c.slug}`}>{c.navLabel}</a></li>)}
+        </ul>
+      </div>
+
+      <div class="lg:col-span-2">
+        <h3 class="font-sans text-sm font-semibold tracking-wider text-white uppercase">Company</h3>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          <li><a class={linkCls} href="/how-it-works">How It Works</a></li>
+          <li><a class={linkCls} href="/fees">Fees</a></li>
+          <li><a class={linkCls} href="/resources">Resources</a></li>
+          <li><a class={linkCls} href="/about">About</a></li>
+          <li><a class={linkCls} href="/contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="lg:col-span-4">
+        <h3 class="font-sans text-sm font-semibold tracking-wider text-white uppercase">Licensed In</h3>
+        <ul class="mt-4 space-y-2 text-sm">
+          {LICENSES.map(l => (
+            <li class="flex items-center justify-between gap-4 border-b border-white/10 pb-2">
+              <span class="text-white">{l.state}</span>
+              <span>License #{l.number}</span>
+            </li>
+          ))}
+          <li class="flex items-center justify-between gap-4">
+            <span class="text-white">National Producer Number</span>
+            <span>NPN {ADJUSTER.npn}</span>
+          </li>
+        </ul>
+        <p class="mt-4 text-xs leading-relaxed text-navy-300">
+          {ADJUSTER.name}, {ADJUSTER.title}. Serving policyholders in {statesSentence}.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-12 border-t border-white/10 pt-6 text-xs leading-relaxed text-navy-300">
+      <p>
+        {SITE.legalName} is a licensed public adjusting firm that represents policyholders only. We are not affiliated with any insurance company. We are not attorneys and do not provide legal advice. Results vary by claim, policy, and circumstances.
+      </p>
+      <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p>© {year} {SITE.legalName}. All rights reserved.</p>
+        <p class="flex gap-4">
+          <a class={linkCls} href="/privacy">Privacy Notice</a>
+          <a class={linkCls} href="/contact">Contact</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

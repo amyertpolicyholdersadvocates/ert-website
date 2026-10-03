@@ -1,0 +1,11 @@
+---
+interface Props {
+  /** 'dark' = for light backgrounds, 'light' = white lettering for navy backgrounds */
+  tone?: 'dark' | 'light';
+  class?: string;
+}
+const { tone = 'dark', class: className = 'h-12 w-auto sm:h-14' } = Astro.props;
+const src = tone === 'dark' ? '/ert-logo.png' : '/ert-logo-light.png';
+---
+
+<img src={src} alt="ERT Policyholders Advocates: Expertise, Representation, Trust" width="468" height="114" class={className} />

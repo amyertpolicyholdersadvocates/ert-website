@@ -1,0 +1,25 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import { SITE } from '@data/site';
+---
+
+<MainLayout title="Privacy Notice" description={`Privacy notice for ${SITE.legalName}.`}>
+  <PageHero title="Privacy Notice" crumbs={[{ label: 'Privacy Notice' }]} />
+  <section class="container-x py-16">
+    <div class="prose prose-lg max-w-3xl prose-headings:font-serif prose-headings:text-navy-900">
+      <p>This notice explains how {SITE.legalName} ("we," "us") handles information submitted through this website.</p>
+      <h2>Information we collect</h2>
+      <p>When you submit the request form or email us, we collect the information you choose to provide, such as your name, email address, phone number, property state, and details about your loss. We do not ask for, and you should not send, Social Security numbers, policy numbers, or banking information through the website.</p>
+      <h2>How we use it</h2>
+      <p>We use your information only to respond to your request, evaluate whether we can help with your claim, and communicate with you. We do not sell your information.</p>
+      <h2>Service providers</h2>
+      <p>Form submissions are delivered to us by email through a third-party form processing service. This website is hosted by Cloudflare, which may process basic technical data such as IP addresses to deliver and protect the site.</p>
+      <h2>Cookies</h2>
+      <p>This website does not use advertising or tracking cookies.</p>
+      <h2>Contact</h2>
+      <p>Questions about this notice? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+      <p class="text-sm">Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+    </div>
+  </section>
+</MainLayout>

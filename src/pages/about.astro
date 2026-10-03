@@ -1,0 +1,57 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Icon from '@components/Icon.astro';
+import CtaBand from '@components/CtaBand.astro';
+import { SITE, ADJUSTER, LICENSES, statesSentence } from '@data/site';
+---
+
+<MainLayout title="About" description={`Meet ${ADJUSTER.name}, licensed public adjuster with ${SITE.legalName}.`}>
+  <PageHero eyebrow="About us" title="An advocate in your corner when it matters most." lead={`${SITE.legalName} represents residential policyholders in ${statesSentence}.`} crumbs={[{ label: 'About' }]} />
+
+  <section class="container-x py-16 sm:py-20">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
+      <aside class="card h-fit text-center">
+        {/* Replace with a photo: put amy.jpg in /public and swap this span for <img src="/amy.jpg" ...> */}
+        <span class="mx-auto inline-flex size-36 items-center justify-center rounded-full bg-navy-900 font-serif text-5xl font-semibold text-gold-400 ring-8 ring-gold-100">{ADJUSTER.initials}</span>
+        <h2 class="mt-6 text-2xl font-semibold text-navy-900">{ADJUSTER.name}</h2>
+        <p class="mt-1 text-sm font-medium text-gold-700">{ADJUSTER.title}</p>
+        <ul class="mt-6 space-y-2 text-left text-sm">
+          {LICENSES.map(l => (
+            <li class="flex justify-between border-b border-slate-100 pb-2"><span class="text-navy-900">{l.state}</span><span class="text-slate-600">#{l.number}</span></li>
+          ))}
+          <li class="flex justify-between"><span class="text-navy-900">NPN</span><span class="text-slate-600">{ADJUSTER.npn}</span></li>
+        </ul>
+        <a href={`mailto:${SITE.email}`} class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-navy-800 hover:text-gold-700">
+          <Icon name="envelope" class="size-4 text-gold-600" />{SITE.email}
+        </a>
+      </aside>
+
+      <div class="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-navy-900 prose-a:text-navy-800 lg:col-span-2">
+        <h2>Meet {ADJUSTER.name}</h2>
+        <p>
+          {ADJUSTER.name} is a licensed public adjuster with {SITE.legalName}, representing homeowners and residential property owners in {statesSentence}. Her work focuses on property and casualty claims involving water damage, fire and smoke, wind and hail, and large-scale catastrophe losses.
+        </p>
+        <p>
+          Amy believes policyholders deserve the same level of expertise on their side of the table that insurance companies bring to theirs. After a loss, most families are dealing with a damaged home, disrupted routines, and an unfamiliar claims process all at once. Amy steps in to carry the technical and administrative weight of the claim so her clients can focus on getting their lives back to normal.
+        </p>
+        <p>
+          Her approach is straightforward: read the policy closely, organize the evidence, and communicate clearly. She builds each claim on documentation, compares insurance company estimates line by line against contractor estimates, and stays persistent through negotiation until the claim is resolved fairly.
+        </p>
+        <p>
+          Every client works directly with Amy. You will know who is handling your claim, how to reach her, and where things stand at every step.
+        </p>
+
+        <h2>Why {SITE.shortName}</h2>
+        <ul>
+          <li><strong>We work only for policyholders.</strong> Never for insurance companies.</li>
+          <li><strong>Licensed and accountable.</strong> Licensed in {statesSentence}, with license numbers listed on every page.</li>
+          <li><strong>Simple, fair fee.</strong> Contingency fee only on insurance proceeds we help obtain, nothing on amounts paid before you hire us. No upfront costs, disclosed in writing.</li>
+          <li><strong>Personal attention.</strong> Your claim is handled by an adjuster who knows it, not passed between departments.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</MainLayout>

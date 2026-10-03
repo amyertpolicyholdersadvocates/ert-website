@@ -1,0 +1,44 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Icon from '@components/Icon.astro';
+import CtaBand from '@components/CtaBand.astro';
+import { SITE } from '@data/site';
+
+const example = 50000;
+const fee = (example * SITE.feePercent) / 100;
+const fmt = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+---
+
+<MainLayout title="Fees" description={`ERT Policyholders Advocates charges a ${SITE.feePercent}% contingency fee with no upfront cost.`}>
+  <PageHero eyebrow="Our fee" title={`${SITE.feePercent}% contingency. No upfront cost.`} lead="A simple, transparent fee that only gets paid when your claim pays." crumbs={[{ label: 'Fees' }]} />
+
+  <section class="container-x py-16 sm:py-20">
+    <div class="grid gap-6 md:grid-cols-3">
+      {[
+        ['dollar', 'Nothing out of pocket', 'There is no charge for the initial claim review and no retainer to get started.'],
+        ['checkCircle', 'Only on what we help obtain', `Our fee is ${SITE.feePercent}% of the insurance proceeds we help obtain. Nothing on amounts paid before you hired us, and if there is no recovery, you owe us nothing.`],
+        ['document', 'In writing, up front', 'The fee is disclosed in our written contract before any work begins, and never exceeds the limits set by your state.'],
+      ].map(([icon, t, d]) => (
+        <div class="card">
+          <span class="icon-tile"><Icon name={icon as any} /></span>
+          <h2 class="mt-5 text-xl font-semibold text-navy-900">{t}</h2>
+          <p class="mt-3 text-slate-600">{d}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mx-auto mt-16 max-w-3xl rounded-3xl bg-navy-900 p-8 text-white sm:p-10">
+      <p class="eyebrow !text-gold-300">Simple example</p>
+      <h2 class="mt-2 text-2xl font-semibold">How the math works</h2>
+      <dl class="mt-6 divide-y divide-white/10">
+        <div class="flex justify-between py-3"><dt class="text-navy-200">Additional proceeds obtained with ERT</dt><dd class="font-semibold">{fmt(example)}</dd></div>
+        <div class="flex justify-between py-3"><dt class="text-navy-200">ERT fee ({SITE.feePercent}%)</dt><dd class="font-semibold text-gold-300">{fmt(fee)}</dd></div>
+        <div class="flex justify-between py-3"><dt class="text-navy-200">Amount to you</dt><dd class="font-semibold">{fmt(example - fee)}</dd></div>
+      </dl>
+      <p class="mt-4 text-sm text-navy-300">For illustration only. Amounts your insurer paid before you hired us are not included. Your contract and state law govern how the fee is calculated.</p>
+    </div>
+  </section>
+
+  <CtaBand title="Find out if we can help, at no cost." />
+</MainLayout>

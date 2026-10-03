@@ -1,0 +1,75 @@
+---
+import BrandLogo from './BrandLogo.astro';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import { NAV } from '@data/site';
+import { CLAIMS } from '@data/claims';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
+const claimsActive = path.startsWith('/claims');
+const linkBase =
+  'rounded-md text-[0.95rem] font-medium transition hover:text-gold-700 focus-visible:outline-2 focus-visible:outline-gold-500 md:py-3';
+---
+
+<header class="sticky inset-x-0 top-3 z-50 w-full px-3 sm:top-4 sm:px-4">
+  <nav
+    class="relative mx-auto max-w-7xl rounded-[28px] border border-navy-900/10 bg-white/85 px-4 py-2.5 shadow-sm backdrop-blur-md md:flex md:items-center md:justify-between md:px-6 md:py-1"
+    aria-label="Main"
+  >
+    <div class="flex items-center justify-between">
+      <a href="/" aria-label="ERT Policyholders Advocates home" class="rounded-md focus-visible:outline-2 focus-visible:outline-gold-500">
+        <BrandLogo />
+      </a>
+      <button
+        type="button"
+        class="hs-collapse-toggle flex size-10 items-center justify-center rounded-full text-navy-900 hover:bg-navy-50 md:hidden"
+        data-hs-collapse="#nav-collapse"
+        aria-controls="nav-collapse"
+        aria-label="Toggle navigation"
+      >
+        <Icon name="menu" class="hs-collapse-open:hidden size-6" />
+        <Icon name="close" class="hs-collapse-open:block hidden size-6" />
+      </button>
+    </div>
+
+    <div id="nav-collapse" class="hs-collapse hidden grow basis-full overflow-hidden transition-all duration-300 md:block">
+      <div class="mt-4 flex flex-col gap-y-3 pb-3 md:mt-0 md:flex-row md:items-center md:justify-end md:gap-x-5 md:pb-0 md:ps-6 lg:gap-x-7">
+        {/* Claim types dropdown (hover/focus on desktop, inline list on mobile) */}
+        <div class="group relative">
+          <a
+            href="/#claim-types"
+            class={`${linkBase} inline-flex items-center gap-1 ${claimsActive ? 'text-gold-700' : 'text-navy-900'}`}
+            aria-haspopup="true"
+          >
+            Losses We Handle <Icon name="chevronDown" class="hidden size-4 md:block" />
+          </a>
+          <div class="mt-2 grid gap-1 ps-3 md:invisible md:absolute md:top-full md:left-1/2 md:mt-0 md:w-72 md:-translate-x-1/2 md:ps-0 md:pt-2 md:opacity-0 md:transition md:group-focus-within:visible md:group-focus-within:opacity-100 md:group-hover:visible md:group-hover:opacity-100">
+            <div class="grid gap-1 md:rounded-2xl md:border md:border-navy-900/10 md:bg-white md:p-2 md:shadow-lg">
+              {CLAIMS.map(c => (
+                <a href={`/claims/${c.slug}`} class="flex items-center gap-3 rounded-lg px-2 py-2 text-sm text-navy-800 hover:bg-navy-50">
+                  <span class="inline-flex size-8 items-center justify-center rounded-lg bg-navy-900 text-gold-400">
+                    <Icon name={c.icon} class="size-4.5" />
+                  </span>
+                  {c.navLabel}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {NAV.map(item => (
+          <a
+            href={item.href}
+            class={`${linkBase} ${isActive(item.href) ? 'text-gold-700' : 'text-navy-900'}`}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
+
+        <Button href="/contact#request-help" variant="navy" class="md:ms-2">Get a Free Review</Button>
+      </div>
+    </div>
+  </nav>
+</header>

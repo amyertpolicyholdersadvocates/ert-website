@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ertpolicyholdersadvocates.com/sitemap-index.xml

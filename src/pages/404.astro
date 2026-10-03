@@ -1,0 +1,14 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Button from '@components/Button.astro';
+---
+
+<MainLayout title="Page Not Found" noindex>
+  <PageHero eyebrow="404" title="We could not find that page." lead="It may have moved. Try the home page or reach out directly.">
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+      <Button href="/" arrow>Back to Home</Button>
+      <Button href="/contact" variant="outlineLight">Contact Us</Button>
+    </div>
+  </PageHero>
+</MainLayout>

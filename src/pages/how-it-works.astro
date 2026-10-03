@@ -1,0 +1,49 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Icon from '@components/Icon.astro';
+import CtaBand from '@components/CtaBand.astro';
+import { STEPS } from '@data/process';
+
+const principles = [
+  ['shield', 'We represent you only', 'We never work for insurance companies. Our only client in your claim is you.'],
+  ['camera', 'Evidence first', 'Strong claims are built on thorough documentation, not opinions.'],
+  ['chat', 'Clear communication', 'You will always know where your claim stands and what comes next.'],
+  ['document', 'Policy driven', 'We tie every item in the claim back to the language in your policy.'],
+  ['checkCircle', 'Honest assessments', 'If we do not think we can add value, we will tell you up front.'],
+] as const;
+---
+
+<MainLayout title="How It Works" description="How ERT Policyholders Advocates handles your property claim, from free review to settlement.">
+  <PageHero eyebrow="How it works" title="From first call to final settlement." lead="Here is what to expect when you work with ERT Policyholders Advocates." crumbs={[{ label: 'How It Works' }]} />
+
+  <section class="container-x py-16 sm:py-20">
+    <ol class="relative mx-auto max-w-3xl space-y-10 border-l-2 border-gold-300 ps-8 sm:ps-12">
+      {STEPS.map((s, i) => (
+        <li class="relative">
+          <span class="absolute top-0 -left-[3.05rem] inline-flex size-12 items-center justify-center rounded-full bg-navy-900 font-serif text-lg font-semibold text-gold-400 ring-4 ring-slate-50 sm:-left-[4.05rem]">{i + 1}</span>
+          <h2 class="text-2xl font-semibold text-navy-900">{s.title}</h2>
+          <p class="mt-3 text-lg text-slate-600">{s.long}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="bg-white py-16 sm:py-20">
+    <div class="container-x">
+      <p class="eyebrow text-center">How we work</p>
+      <h2 class="section-title text-center">Five principles behind every claim.</h2>
+      <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+        {principles.map(([icon, t, d]) => (
+          <div class="rounded-2xl border border-slate-200 p-5">
+            <Icon name={icon} class="size-7 text-gold-600" />
+            <h3 class="mt-3 text-lg font-semibold text-navy-900">{t}</h3>
+            <p class="mt-2 text-sm text-slate-600">{d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</MainLayout>

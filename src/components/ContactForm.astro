@@ -1,0 +1,123 @@
+---
+import Button from './Button.astro';
+import { SITE, FORM_ENDPOINT, STATES_SERVED } from '@data/site';
+import { CLAIMS } from '@data/claims';
+
+const field =
+  'mt-1.5 block w-full min-w-0 max-w-full rounded-lg border-slate-300 bg-white text-navy-900 shadow-sm focus:border-gold-500 focus:ring-gold-500';
+const label = 'block text-sm font-medium text-navy-900';
+// Plain (non-AJAX) endpoint used if JavaScript is off.
+const fallbackAction = FORM_ENDPOINT.replace('/ajax/', '/');
+---
+
+<form id="request-help-form" action={fallbackAction} method="POST" class="card !p-6 sm:!p-8" data-email={SITE.email} novalidate>
+  <input type="hidden" name="_subject" value="New claim review request from the website" />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_next" value={`${SITE.url}/thank-you`} />
+  <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+  <div class="grid gap-5 sm:grid-cols-2 [&>div]:min-w-0">
+    <div>
+      <label class={label} for="f-name">Full name *</label>
+      <input class={field} id="f-name" name="name" type="text" autocomplete="name" required />
+    </div>
+    <div>
+      <label class={label} for="f-email">Email *</label>
+      <input class={field} id="f-email" name="email" type="email" autocomplete="email" required />
+    </div>
+    <div>
+      <label class={label} for="f-phone">Phone *</label>
+      <input class={field} id="f-phone" name="phone" type="tel" autocomplete="tel" required />
+    </div>
+    <div>
+      <label class={label} for="f-state">Property state *</label>
+      <select class={field} id="f-state" name="property_state" required>
+        <option value="">Select a state</option>
+        {STATES_SERVED.map(s => <option>{s}</option>)}
+        <option>Other</option>
+      </select>
+    </div>
+    <div>
+      <label class={label} for="f-type">Type of damage *</label>
+      <select class={field} id="f-type" name="damage_type" required>
+        <option value="">Select one</option>
+        {CLAIMS.map(c => <option>{c.navLabel}</option>)}
+        <option>Not sure / other</option>
+      </select>
+    </div>
+    <div>
+      <label class={label} for="f-status">Claim status</label>
+      <select class={field} id="f-status" name="claim_status">
+        <option value="">Select one</option>
+        <option>Not filed yet</option>
+        <option>Filed, waiting on the insurer</option>
+        <option>Offer seems too low</option>
+        <option>Claim denied</option>
+        <option>Claim delayed</option>
+        <option>Already settled, want a review</option>
+      </select>
+    </div>
+    <div>
+      <label class={label} for="f-date">Approximate date of loss</label>
+      <input class={field} id="f-date" name="date_of_loss" type="date" />
+    </div>
+    <div>
+      <label class={label} for="f-insurer">Insurance company</label>
+      <input class={field} id="f-insurer" name="insurance_company" type="text" />
+    </div>
+    <div class="sm:col-span-2">
+      <label class={label} for="f-msg">What happened? *</label>
+      <textarea class={field} id="f-msg" name="message" rows="5" required placeholder="A few sentences is plenty: what was damaged, when, and where things stand with your insurer."></textarea>
+    </div>
+  </div>
+
+  <p class="mt-5 text-xs text-slate-500">
+    Submitting this form does not create a contract or obligate you in any way. Please do not include policy numbers, Social Security numbers, or banking information.
+  </p>
+  <div class="mt-5 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+    <Button type="submit" variant="navy" size="lg" arrow id="f-submit">Send My Request</Button>
+    <p id="f-status-msg" class="text-sm" role="status" aria-live="polite"></p>
+  </div>
+</form>
+
+<script>
+  const form = document.getElementById('request-help-form') as HTMLFormElement | null;
+  const msg = document.getElementById('f-status-msg');
+  const btn = document.getElementById('f-submit') as HTMLButtonElement | null;
+
+  form?.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    if (btn) btn.disabled = true;
+    if (msg) {
+      msg.className = 'text-sm text-slate-600';
+      msg.textContent = 'Sending...';
+    }
+    const data = Object.fromEntries(new FormData(form).entries());
+    try {
+      const res = await fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.success === 'false' || json.success === false) throw new Error(json.message);
+      form.reset();
+      if (msg) {
+        msg.className = 'text-sm font-medium text-emerald-700';
+        msg.textContent = 'Thank you. Your request was sent and we will be in touch shortly.';
+      }
+    } catch {
+      if (msg) {
+        msg.className = 'text-sm font-medium text-red-700';
+        msg.innerHTML = 'Something went wrong. Please email us directly at <a class="underline" href="mailto:' +
+          form.dataset.email + '">' + form.dataset.email + '</a>.';
+      }
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  });
+</script>

@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './icons';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  icon?: IconName;
+  crumbs?: { label: string; href?: string }[];
+}
+const { eyebrow, title, lead, icon, crumbs = [] } = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-navy-950 pt-36 pb-16 text-white sm:pt-40 sm:pb-20">
+  <div class="pointer-events-none absolute inset-0 opacity-[0.07]" style="background-image: radial-gradient(circle at 1px 1px, #fff 1px, transparent 0); background-size: 28px 28px;"></div>
+  <div class="pointer-events-none absolute -top-24 -right-24 size-96 rounded-full bg-gold-500/15 blur-3xl"></div>
+  <div class="container-x relative">
+    {crumbs.length > 0 && (
+      <nav aria-label="Breadcrumb" class="mb-6 text-sm text-navy-300">
+        <a href="/" class="hover:text-gold-300">Home</a>
+        {crumbs.map(c => (
+          <>
+            <span class="mx-2 text-navy-500">/</span>
+            {c.href ? <a href={c.href} class="hover:text-gold-300">{c.label}</a> : <span class="text-navy-100">{c.label}</span>}
+          </>
+        ))}
+      </nav>
+    )}
+    <div class="flex items-start gap-5">
+      {icon && (
+        <span class="hidden size-14 shrink-0 items-center justify-center rounded-2xl border border-gold-400/40 bg-navy-900 text-gold-400 sm:inline-flex">
+          <Icon name={icon} class="size-7" />
+        </span>
+      )}
+      <div class="max-w-3xl">
+        {eyebrow && <p class="eyebrow !text-gold-300">{eyebrow}</p>}
+        <h1 class="mt-2 text-4xl font-semibold sm:text-5xl">{title}</h1>
+        {lead && <p class="mt-5 text-lg text-pretty text-navy-200">{lead}</p>}
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>

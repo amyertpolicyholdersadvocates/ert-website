@@ -1,0 +1,67 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Icon from '@components/Icon.astro';
+import CtaBand from '@components/CtaBand.astro';
+import AccordionItem from '@components/AccordionItem.astro';
+import { FAQS } from '@data/faqs';
+
+const checklist = [
+  { title: 'Protect people and property', items: ['Make sure everyone is safe', 'Stop the source of damage if you safely can', 'Make temporary repairs to prevent further damage (tarps, boarding, water shutoff)', 'Keep receipts for every emergency expense'] },
+  { title: 'Document everything', items: ['Take photos and video before cleanup', 'Photograph serial numbers and labels on damaged items', 'Keep damaged materials until the insurer has inspected', 'Write down the date, time, and how the damage happened'] },
+  { title: 'Work the claim carefully', items: ['Report the claim promptly', 'Request a complete copy of your policy, not just the declarations page', 'Keep a log of every call, email, and visit', 'Do not sign a release or accept a final offer until you understand it'] },
+];
+
+const terms = [
+  ['Declarations page', 'The summary page of your policy listing your coverages, limits, and deductibles.'],
+  ['Dwelling coverage', 'Pays to repair or rebuild the structure of your home.'],
+  ['Personal property', 'Covers your belongings, such as furniture, clothing, and electronics.'],
+  ['Additional living expenses (ALE)', 'Covers extra costs of living elsewhere while your home is being repaired.'],
+  ['Replacement cost vs. actual cash value', 'Replacement cost pays to replace with new; actual cash value subtracts depreciation.'],
+  ['Recoverable depreciation', 'Money held back until repairs are completed, then paid if your policy allows.'],
+  ['Proof of loss', 'A sworn statement of what you are claiming. It often has a deadline.'],
+  ['Ordinance or law', 'Coverage for extra costs required to bring repairs up to current building codes.'],
+];
+---
+
+<MainLayout title="Resources" description="After-a-loss checklist, insurance terms explained, and answers to common questions from ERT Policyholders Advocates.">
+  <PageHero eyebrow="Resources" title="Helpful information for policyholders." lead="A checklist for the first days after a loss, plain-English insurance terms, and answers to common questions." crumbs={[{ label: 'Resources' }]} />
+
+  <section class="container-x py-16 sm:py-20">
+    <h2 class="section-title !mt-0">After-a-loss checklist</h2>
+    <div class="mt-10 grid gap-6 md:grid-cols-3">
+      {checklist.map((c, i) => (
+        <div class="card">
+          <span class="inline-flex size-10 items-center justify-center rounded-full bg-gold-400 font-serif font-bold text-navy-950">{i + 1}</span>
+          <h3 class="mt-4 text-xl font-semibold text-navy-900">{c.title}</h3>
+          <ul class="mt-4 space-y-2.5">
+            {c.items.map(it => <li class="flex gap-2.5 text-slate-600"><Icon name="check" class="mt-1 size-4 shrink-0 text-gold-600" />{it}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="bg-white py-16 sm:py-20">
+    <div class="container-x">
+      <h2 class="section-title !mt-0">Insurance terms, explained</h2>
+      <dl class="mt-10 grid gap-x-10 gap-y-6 md:grid-cols-2">
+        {terms.map(([t, d]) => (
+          <div class="border-l-4 border-gold-400 ps-4">
+            <dt class="font-semibold text-navy-900">{t}</dt>
+            <dd class="mt-1 text-slate-600">{d}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="container-x py-16 sm:py-20">
+    <h2 class="section-title !mt-0">Frequently asked questions</h2>
+    <div class="hs-accordion-group mt-6 max-w-4xl">
+      {FAQS.map((f, i) => <AccordionItem id={`rfaq-${i}`} question={f.q} open={i === 0}><p>{f.a}</p></AccordionItem>)}
+    </div>
+  </section>
+
+  <CtaBand />
+</MainLayout>

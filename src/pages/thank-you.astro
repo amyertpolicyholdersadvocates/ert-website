@@ -1,0 +1,11 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import PageHero from '@components/PageHero.astro';
+import Button from '@components/Button.astro';
+---
+
+<MainLayout title="Thank You" noindex>
+  <PageHero title="Thank you. Your request was sent." lead="We will review what you shared and be in touch shortly.">
+    <div class="mt-8"><Button href="/" arrow>Back to Home</Button></div>
+  </PageHero>
+</MainLayout>

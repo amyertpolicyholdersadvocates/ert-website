@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  href?: string;
+  variant?: 'gold' | 'navy' | 'outline' | 'outlineLight';
+  size?: 'md' | 'lg';
+  arrow?: boolean;
+  class?: string;
+  type?: 'button' | 'submit';
+  [attr: string]: unknown;
+}
+
+const { href, variant = 'gold', size = 'md', arrow = false, class: cls = '', type = 'button', ...rest } = Astro.props;
+
+const variants = {
+  gold: 'bg-gold-400 text-navy-950 hover:bg-gold-300 shadow-sm',
+  navy: 'bg-navy-900 text-white hover:bg-navy-800 shadow-sm',
+  outline: 'border border-navy-900/20 text-navy-900 hover:border-navy-900 hover:bg-navy-50',
+  outlineLight: 'border border-white/30 text-white hover:border-gold-300 hover:text-gold-200',
+};
+const sizes = { md: 'px-4 py-2.5 text-sm', lg: 'px-6 py-3.5 text-base' };
+const classes = `group inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500 ${variants[variant]} ${sizes[size]} ${cls}`;
+const El = href ? 'a' : 'button';
+---
+
+<El class={classes} href={href} type={href ? undefined : type} {...rest}>
+  <slot />
+  {arrow && <Icon name="arrowRight" class="size-4 transition group-hover:translate-x-0.5" />}
+</El>

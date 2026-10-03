@@ -71,7 +71,7 @@ const whoWeHelp = [
         <ul class="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-navy-100">
           <li class="flex items-center gap-2"><Icon name="checkCircle" class="size-5 text-gold-400" />We work for policyholders</li>
           <li class="flex items-center gap-2"><Icon name="checkCircle" class="size-5 text-gold-400" />No upfront cost</li>
-          <li class="flex items-center gap-2"><Icon name="checkCircle" class="size-5 text-gold-400" />{SITE.feePercent}% contingency fee</li>
+          <li class="flex items-center gap-2"><Icon name="checkCircle" class="size-5 text-gold-400" />Contingency fee</li>
         </ul>
       </div>
 
@@ -98,7 +98,7 @@ const whoWeHelp = [
           </ul>
           <div class="mt-6 rounded-2xl bg-gold-400/10 p-4 ring-1 ring-gold-400/30">
             <p class="text-sm text-gold-100">
-              <span class="font-serif text-2xl font-semibold text-gold-300">{SITE.feePercent}%</span> of the insurance proceeds we help obtain, paid only when your claim pays. Nothing out of pocket to get started.
+              <span class="font-serif text-2xl font-semibold text-gold-300">$0 upfront.</span> Our contingency fee applies only to the insurance proceeds we help obtain, and is paid only when your claim pays.
             </p>
           </div>
         </div>
@@ -230,8 +230,8 @@ const whoWeHelp = [
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
       <div class="card flex flex-col !p-8 sm:!p-10">
         <p class="eyebrow">Our fee</p>
-        <p class="mt-4 font-serif text-7xl font-semibold text-navy-900">{SITE.feePercent}<span class="text-gold-500">%</span></p>
-        <p class="mt-2 text-lg font-medium text-navy-800">Contingency basis. No upfront cost.</p>
+        <p class="mt-4 font-serif text-7xl font-semibold text-navy-900"><span class="text-gold-500">$</span>0</p>
+        <p class="mt-2 text-lg font-medium text-navy-800">Upfront. Contingency basis only.</p>
         <p class="mt-4 text-slate-600">
           Our fee is a percentage of the insurance proceeds we help obtain, never of amounts paid before you hired us. If there is no recovery, you owe us nothing. Every fee is disclosed in writing before we begin, and never exceeds the limits set by state law.
         </p>
@@ -288,8 +288,8 @@ const whoWeHelp = [
           ))}
         </ol>
         <div class="mt-8 flex items-center gap-3 rounded-xl bg-navy-50 p-4 text-sm">
-          <Icon name="envelope" class="size-5 shrink-0 text-gold-600" />
-          <span>Prefer email? <a class="link-gold" href={`mailto:${SITE.email}`}>{SITE.email}</a></span>
+          <Icon name="shield" class="size-5 shrink-0 text-gold-600" />
+          <span>Your information goes directly to {ADJUSTER.name} and is never shared or sold.</span>
         </div>
       </div>
       <div class="min-w-0 lg:col-span-3"><ContactForm /></div>

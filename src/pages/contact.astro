@@ -14,10 +14,11 @@ import { SITE, LICENSES, ADJUSTER, statesSentence } from '@data/site';
       <div class="min-w-0 lg:col-span-2"><ContactForm /></div>
       <aside class="space-y-6">
         <div class="card">
-          <h2 class="text-xl font-semibold text-navy-900">Reach us directly</h2>
-          <a href={`mailto:${SITE.email}`} class="mt-4 flex items-center gap-3 text-navy-800 hover:text-gold-700">
-            <span class="icon-tile !size-10 shrink-0"><Icon name="envelope" class="size-5" /></span><span class="break-all">{SITE.email}</span>
-          </a>
+          <h2 class="text-xl font-semibold text-navy-900">How to reach us</h2>
+          <p class="mt-4 flex items-start gap-3 text-sm text-slate-600">
+            <span class="icon-tile !size-10 shrink-0"><Icon name="shield" class="size-5" /></span>
+            <span>The form goes straight to {ADJUSTER.name}. To protect our clients from phishing and spam, we do not publish email addresses. We will reply from our business address after you reach out.</span>
+          </p>
           {SITE.phone && (
             <a href={`tel:${SITE.phone.replace(/[^0-9+]/g, '')}`} class="mt-3 flex items-center gap-3 text-navy-800 hover:text-gold-700">
               <span class="icon-tile !size-10"><Icon name="phone" class="size-5" /></span>{SITE.phone}

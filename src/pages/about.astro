@@ -22,8 +22,8 @@ import { SITE, ADJUSTER, LICENSES, statesSentence } from '@data/site';
           ))}
           <li class="flex justify-between"><span class="text-navy-900">NPN</span><span class="text-slate-600">{ADJUSTER.npn}</span></li>
         </ul>
-        <a href={`mailto:${SITE.email}`} class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-navy-800 hover:text-gold-700">
-          <Icon name="envelope" class="size-4 text-gold-600" />{SITE.email}
+        <a href="/contact#request-help" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-navy-800 hover:text-gold-700">
+          <Icon name="envelope" class="size-4 text-gold-600" />Send {ADJUSTER.name.split(' ')[0]} a message
         </a>
       </aside>
 

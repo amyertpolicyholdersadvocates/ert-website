@@ -1,20 +1,18 @@
 ---
 import Button from './Button.astro';
-import { SITE, FORM_ENDPOINT, STATES_SERVED } from '@data/site';
+import { FORM_ENDPOINT, TURNSTILE_SITE_KEY, STATES_SERVED } from '@data/site';
 import { CLAIMS } from '@data/claims';
 
 const field =
   'mt-1.5 block w-full min-w-0 max-w-full rounded-lg border-slate-300 bg-white text-navy-900 shadow-sm focus:border-gold-500 focus:ring-gold-500';
 const label = 'block text-sm font-medium text-navy-900';
-// Plain (non-AJAX) endpoint used if JavaScript is off.
-const fallbackAction = FORM_ENDPOINT.replace('/ajax/', '/');
 ---
 
-<form id="request-help-form" action={fallbackAction} method="POST" class="card !p-6 sm:!p-8" data-email={SITE.email} novalidate>
-  <input type="hidden" name="_subject" value="New claim review request from the website" />
-  <input type="hidden" name="_template" value="table" />
-  <input type="hidden" name="_next" value={`${SITE.url}/thank-you`} />
-  <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+<form id="request-help-form" action={FORM_ENDPOINT} method="POST" class="card !p-6 sm:!p-8" novalidate>
+  {/* Honeypot: hidden from people, filled in by bots */}
+  <div class="hidden" aria-hidden="true">
+    <label>Leave this empty <input type="text" name="company_website" tabindex="-1" autocomplete="off" /></label>
+  </div>
 
   <div class="grid gap-5 sm:grid-cols-2 [&>div]:min-w-0">
     <div>
@@ -74,16 +72,24 @@ const fallbackAction = FORM_ENDPOINT.replace('/ajax/', '/');
   <p class="mt-5 text-xs text-slate-500">
     Submitting this form does not create a contract or obligate you in any way. Please do not include policy numbers, Social Security numbers, or banking information.
   </p>
+  <div class="cf-turnstile mt-5" data-sitekey={TURNSTILE_SITE_KEY} data-theme="light" data-size="flexible"></div>
   <div class="mt-5 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
     <Button type="submit" variant="navy" size="lg" arrow id="f-submit">Send My Request</Button>
     <p id="f-status-msg" class="text-sm" role="status" aria-live="polite"></p>
   </div>
 </form>
 
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
   const form = document.getElementById('request-help-form') as HTMLFormElement | null;
   const msg = document.getElementById('f-status-msg');
   const btn = document.getElementById('f-submit') as HTMLButtonElement | null;
+
+  const show = (text: string, tone: 'info' | 'ok' | 'err') => {
+    if (!msg) return;
+    msg.className = 'text-sm font-medium ' + (tone === 'ok' ? 'text-emerald-700' : tone === 'err' ? 'text-red-700' : 'text-slate-600');
+    msg.textContent = text;
+  };
 
   form?.addEventListener('submit', async e => {
     e.preventDefault();
@@ -91,32 +97,23 @@ const fallbackAction = FORM_ENDPOINT.replace('/ajax/', '/');
       form.reportValidity();
       return;
     }
-    if (btn) btn.disabled = true;
-    if (msg) {
-      msg.className = 'text-sm text-slate-600';
-      msg.textContent = 'Sending...';
+    const data = new FormData(form);
+    if (!data.get('cf-turnstile-response')) {
+      show('Please complete the verification check above the button.', 'err');
+      return;
     }
-    const data = Object.fromEntries(new FormData(form).entries());
+    if (btn) btn.disabled = true;
+    show('Sending...', 'info');
     try {
-      const res = await fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(data),
-      });
+      const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
       const json = await res.json().catch(() => ({}));
-      if (!res.ok || json.success === 'false' || json.success === false) throw new Error(json.message);
+      if (!res.ok || !json.ok) throw new Error(json.error || 'We could not send your request. Please try again in a few minutes.');
       form.reset();
-      if (msg) {
-        msg.className = 'text-sm font-medium text-emerald-700';
-        msg.textContent = 'Thank you. Your request was sent and we will be in touch shortly.';
-      }
-    } catch {
-      if (msg) {
-        msg.className = 'text-sm font-medium text-red-700';
-        msg.innerHTML = 'Something went wrong. Please email us directly at <a class="underline" href="mailto:' +
-          form.dataset.email + '">' + form.dataset.email + '</a>.';
-      }
+      show('Thank you. Your request was sent and we will be in touch shortly.', 'ok');
+    } catch (err) {
+      show(err instanceof Error ? err.message : 'We could not send your request. Please try again in a few minutes.', 'err');
     } finally {
+      (window as any).turnstile?.reset();
       if (btn) btn.disabled = false;
     }
   });

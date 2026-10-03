@@ -21,11 +21,10 @@ const jsonLd = {
   '@type': 'ProfessionalService',
   name: SITE.legalName,
   url: SITE.url,
-  email: SITE.email,
   ...(SITE.phone ? { telephone: SITE.phone } : {}),
   description: SITE.description,
   image: ogImage,
-  priceRange: `${SITE.feePercent}% contingency`,
+  priceRange: 'Contingency fee',
   areaServed: LICENSES.map(l => ({ '@type': 'State', name: l.state })),
   employee: { '@type': 'Person', name: ADJUSTER.name, jobTitle: ADJUSTER.title },
 };

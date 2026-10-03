@@ -7,7 +7,7 @@ export const FAQS = [
   },
   {
     q: 'How much does it cost?',
-    a: `Our fee is ${SITE.feePercent}% of the insurance proceeds we help obtain, on a contingency basis. We never take a fee on money your insurer paid before you hired us. There is no upfront cost, and if there is no recovery you owe us nothing. The fee is spelled out in writing in our contract before any work begins and never exceeds the limits set by state law.`,
+    a: `Our fee is a percentage of the insurance proceeds we help obtain, on a contingency basis. We never take a fee on money your insurer paid before you hired us. There is no upfront cost, and if there is no recovery you owe us nothing. The fee is spelled out in writing in our contract before any work begins and never exceeds the limits set by state law.`,
   },
   {
     q: 'Is my insurance company’s adjuster not on my side?',

@@ -10,7 +10,7 @@ Hosted on Cloudflare Workers (static assets) with automatic deploys from GitHub.
 
 | What | File |
 | --- | --- |
-| Business name, email, phone, fee %, licenses, NPN | `src/data/site.ts` |
+| Business name, email, phone, licenses, NPN | `src/data/site.ts` |
 | Claim types (water, fire, storm, catastrophe) | `src/data/claims.ts` |
 | Process steps | `src/data/process.ts` |
 | FAQs | `src/data/faqs.ts` |
@@ -20,11 +20,24 @@ Hosted on Cloudflare Workers (static assets) with automatic deploys from GitHub.
 
 Adding a phone number: set `phone` in `src/data/site.ts` and it appears in the footer and contact page.
 
-## Contact form
+## Contact form (no public email address)
 
-The Request Help form posts to [FormSubmit](https://formsubmit.co) and is emailed to the
-address in `src/data/site.ts`. The **first** submission sends an activation email to that
-address; click the link in it once to start receiving submissions.
+The form posts to `/api/contact`, handled by the Worker in `worker/index.js`. The Worker
+checks a Cloudflare Turnstile token (bot protection), then sends the submission to Amy
+through [Resend](https://resend.com). Amy's address is never in the site or this repo.
+
+Set these in Cloudflare (Worker > Settings > Variables and Secrets, type **Secret**):
+
+| Name | Value |
+| --- | --- |
+| `RESEND_API_KEY` | API key from Resend (`re_...`) |
+| `TURNSTILE_SECRET_KEY` | Secret key from Cloudflare > Turnstile |
+| `CONTACT_TO` | Inbox that receives submissions |
+| `CONTACT_FROM` | Sender on the verified Resend domain, e.g. `ERT Website <website@ertpolicyholdersadvocates.com>` |
+
+The Turnstile **site key** is public and goes in `src/data/site.ts` (`TURNSTILE_SITE_KEY`).
+
+For local testing, put the same names in a `.dev.vars` file (git-ignored) and run `npx wrangler dev`.
 
 ## Local development
 

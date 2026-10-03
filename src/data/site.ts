@@ -8,16 +8,22 @@ export const SITE = {
   shortName: 'ERT',
   tagline: 'Licensed public adjusters working for policyholders, not insurance companies.',
   description:
-    'ERT Policyholders Advocates, LLC is a licensed public adjusting firm helping homeowners in Illinois, North Carolina, and Georgia with water, fire, storm, and catastrophe property claims. 10% contingency fee, no upfront cost.',
+    'ERT Policyholders Advocates, LLC is a licensed public adjusting firm helping homeowners in Illinois, North Carolina, and Georgia with water, fire, storm, and catastrophe property claims. Contingency fee, no upfront cost.',
   url: 'https://ertpolicyholdersadvocates.com',
-  email: 'amy@ertpolicyholdersadvocates.com',
   // Leave phone empty to hide it everywhere. Example: '(555) 555-5555'
   phone: '',
-  feePercent: 10,
 };
 
-/** Where the Request Help form sends submissions (FormSubmit.co, no account needed). */
-export const FORM_ENDPOINT = `https://formsubmit.co/ajax/${SITE.email}`;
+/**
+ * Contact form. Submissions go to the site's own Worker (/api/contact), which
+ * emails them to Amy. Her address is stored only as a Cloudflare secret
+ * (CONTACT_TO), so it never appears in the website or this repository.
+ *
+ * TURNSTILE_SITE_KEY is public by design (from Cloudflare > Turnstile).
+ * Its matching secret key is stored only as the TURNSTILE_SECRET_KEY secret.
+ */
+export const FORM_ENDPOINT = '/api/contact';
+export const TURNSTILE_SITE_KEY = '0x4AAAAAAFMf8ibvf6mEDvyj';
 
 export const ADJUSTER = {
   name: 'Amy Thorpe',

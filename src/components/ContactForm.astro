@@ -107,7 +107,11 @@ const label = 'block text-sm font-medium text-navy-900';
     try {
       const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
       const json = await res.json().catch(() => ({}));
-      if (!res.ok || !json.ok) throw new Error(json.error || 'We could not send your request. Please try again in a few minutes.');
+      if (!res.ok || !json.ok) {
+        const base = json.error || 'We could not send your request. Please try again in a few minutes.';
+        const extra = [json.code, json.detail].filter(Boolean).join(': ');
+        throw new Error(extra ? `${base} (${extra})` : base);
+      }
       form.reset();
       show('Thank you. Your request was sent and we will be in touch shortly.', 'ok');
     } catch (err) {

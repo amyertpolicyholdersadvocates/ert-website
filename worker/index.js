@@ -56,8 +56,10 @@ async function handleContact(request, env) {
     return json({ ok: false, error: 'Forbidden' }, 403);
   }
 
-  if (!env.RESEND_API_KEY || !env.TURNSTILE_SECRET_KEY || !env.CONTACT_TO || !env.CONTACT_FROM) {
-    console.error('Contact form is not configured: missing secrets');
+  const missing = ['RESEND_API_KEY', 'TURNSTILE_SECRET_KEY', 'CONTACT_TO', 'CONTACT_FROM'].filter(k => !env[k]);
+  if (missing.length) {
+    // Logs names only, never values. View in Cloudflare: Worker > Observability / Logs.
+    console.error('Contact form is not configured. Missing: ' + missing.join(', '));
     return json({ ok: false, error: 'The form is temporarily unavailable.' }, 503);
   }
 
@@ -113,8 +115,21 @@ async function handleContact(request, env) {
   });
 
   if (!res.ok) {
-    console.error('Resend error', res.status, await res.text().catch(() => ''));
-    return json({ ok: false, error: 'We could not send your request. Please try again in a few minutes.' }, 502);
+    const raw = await res.text().catch(() => '');
+    console.error('Resend error', res.status, raw);
+    // Short reason code shown under the error so setup problems are easy to spot.
+    // Resend's messages contain no secrets (e.g. "domain is not verified").
+    let reason = '';
+    try { reason = JSON.parse(raw).message || ''; } catch {}
+    return json(
+      {
+        ok: false,
+        error: 'We could not send your request. Please try again in a few minutes.',
+        code: `email-${res.status}`,
+        detail: reason.slice(0, 200),
+      },
+      502
+    );
   }
   return json({ ok: true });
 }
